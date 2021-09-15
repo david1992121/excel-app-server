@@ -1,5 +1,5 @@
 from account.models import User
-from account.serializers import EmailRegisterSerializer
+from account.serializers import EmailRegisterSerializer, UserSerializer
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
@@ -45,3 +45,9 @@ class ObtainExpiringAuthToken(ObtainAuthToken):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 obtain_expiring_auth_token = ObtainExpiringAuthToken.as_view()
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_info(request):
+    print(UserSerializer(request.user).data)
+    return Response(UserSerializer(request.user).data)

@@ -30,7 +30,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -52,6 +52,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -66,7 +67,9 @@ ROOT_URLCONF = 'excelapp.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, "templates")
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -94,18 +97,18 @@ DATABASES = {
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    # },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    # },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    # },
 ]
 
 AUTH_USER_MODEL = 'account.User'
@@ -130,6 +133,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+if DEBUG:
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, "static"),
+    ]
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -144,3 +154,44 @@ REST_FRAMEWORK = {
 SITE_HEADER = "Excelユーザー管理"
 SITE_TITLE = "Excelユーザー管理"
 TOKEN_EXPIRE = int(env("TOKEN_EXPIRE"))
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+# simple ui settings
+SIMPLEUI_HOME_INFO = False
+SIMPLEUI_HOME_ACTION = True
+SIMPLEUI_STATIC_OFFLINE = True
+
+SIMPLEUI_CONFIG = {
+    'system_keep': False,
+    'menu_display': ['ホーム', '基礎データ', 'ユーザーと権限'],
+    'menus': [   
+        {
+            'name': '基礎データ',
+            'icon': 'fa fa-database',
+            'models':[
+                {
+                    'name': 'バリューエーション',
+                    'icon': 'fa fa-book',
+                    'url': 'ratio/ratio'
+                }
+            ]
+        },
+        {
+            'name': 'ユーザーと権限',
+            'icon': 'fas fa-shield-alt',
+            'models': [
+                {
+                    'name': 'ユーザー',
+                    'icon': 'fas fa-user',
+                    'url': 'account/user'
+                },
+                {
+                    'name': 'グループ',
+                    'icon': 'fas fa-users-cog',
+                    'url': 'auth/group'
+                }
+            ]
+        }
+    ]
+}

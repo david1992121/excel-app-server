@@ -1,0 +1,15 @@
+.image-container .image-item img{
+    max-width: 300px;
+}
+
+.el-container .logo-wrap{
+    margin-left: 20px;
+}
+
+.calendarnav-previous{
+    background-position: 0 -15px;
+}
+
+.calendarnav-next{
+    background-position: 0 -45px;
+}
