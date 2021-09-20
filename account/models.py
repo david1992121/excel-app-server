@@ -5,5 +5,5 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     email = models.EmailField('メールアドレス', unique=True)
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['username']
     pass

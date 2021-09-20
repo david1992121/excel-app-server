@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class RatioConfig(AppConfig):
+class WorkConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'ratio'
+    name = 'work'

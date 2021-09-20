@@ -1,4 +1,4 @@
-from ratio.models import Ratio
+from work.models import Ratio
 from django.contrib import admin
 
 # Register your models here.

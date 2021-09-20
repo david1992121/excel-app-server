@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken', 
     'account',
-    'ratio'
+    'work'
 ]
 
 MIDDLEWARE = [
@@ -173,7 +173,7 @@ SIMPLEUI_CONFIG = {
                 {
                     'name': 'バリューエーション',
                     'icon': 'fa fa-book',
-                    'url': 'ratio/ratio'
+                    'url': 'work/ratio'
                 }
             ]
         },
