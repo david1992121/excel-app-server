@@ -45,11 +45,7 @@ class ClassesView(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.UpdateM
         return self.create(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
-        serialize = SheetSerializer(data = request.data)
-        if serialize.is_valid():
-            return self.update(request, *args, **kwargs)
-        else:
-            print(serialize.errors)
+        return self.update(request, *args, **kwargs)
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
