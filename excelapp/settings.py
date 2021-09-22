@@ -89,7 +89,15 @@ WSGI_APPLICATION = 'excelapp.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': env.db()
+    # 'default': env.db()
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'db_excel_app',
+        'USER': 'root',
+        'PASSWORD': '+gsVYoo71o_u',
+        'PORT': '3306',
+        'HOST': 'localhost',
+    }
 }
 
 
