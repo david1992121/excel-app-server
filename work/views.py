@@ -64,6 +64,6 @@ def check_sheet_title(request):
                     return Response(status=status.HTTP_403_FORBIDDEN)                   
             except Sheet.DoesNotExist:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
-        return Response( Sheet.objects.exclude(id = sheet_id).filter(title = title).count() == 0 )
+        return Response( Sheet.objects.exclude(id = sheet_id).filter(user = request.user, title = title).count() == 0 )
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)
