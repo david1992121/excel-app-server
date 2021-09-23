@@ -159,8 +159,8 @@ REST_FRAMEWORK = {
     ]
 }
 
-SITE_HEADER = "Excelユーザー管理"
-SITE_TITLE = "Excelユーザー管理"
+SITE_HEADER = "企業分析ツール管理"
+SITE_TITLE = "企業分析ツール管理"
 TOKEN_EXPIRE = int(env("TOKEN_EXPIRE"))
 
 CORS_ORIGIN_ALLOW_ALL = True
