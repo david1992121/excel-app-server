@@ -59,7 +59,7 @@ def check_sheet_title(request):
         sheet_id = int(sheet_id)
         if sheet_id > 0:
             try:
-                sheet = Sheet.objets.get(pk=sheet_id)
+                sheet = Sheet.objects.get(pk=sheet_id)
                 if sheet.user_id != request.user.id:
                     return Response(status=status.HTTP_403_FORBIDDEN)                   
             except Sheet.DoesNotExist:
