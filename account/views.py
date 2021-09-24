@@ -58,7 +58,7 @@ def bulk_create(request):
     if serializer.is_valid():
         input_data = serializer.validated_data
         code = input_data.get('code', '')
-        if code == settings["UPLOAD_TOKEN"]:
+        if code == settings.UPLOAD_TOKEN:
             data = input_data.get('data', None)
             err_emails = []
             if data:
