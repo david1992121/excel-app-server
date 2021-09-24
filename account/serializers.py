@@ -14,3 +14,14 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('id', 'email', 'username', 'is_active', )
         model = User
+
+class UploadedUserSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    pwd = serializers.CharField(min_length = 8)
+    username = serializers.CharField()
+
+class BulkUploadSerializer(serializers.Serializer):
+    code = serializers.CharField()
+    data = serializers.ListField(
+        child = UploadedUserSerializer()
+    )

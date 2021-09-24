@@ -203,3 +203,5 @@ SIMPLEUI_CONFIG = {
         }
     ]
 }
+
+UPLOAD_TOKEN = env("UPLOAD_TOKEN")

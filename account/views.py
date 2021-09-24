@@ -1,6 +1,6 @@
 from account.models import User
-from account.serializers import EmailRegisterSerializer, UserSerializer
-from django.shortcuts import render
+from account.serializers import BulkUploadSerializer, EmailRegisterSerializer, UserSerializer
+from django.conf import settings
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import permission_classes, api_view
@@ -49,5 +49,32 @@ obtain_expiring_auth_token = ObtainExpiringAuthToken.as_view()
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_info(request):
-    print(UserSerializer(request.user).data)
     return Response(UserSerializer(request.user).data)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def bulk_create(request):
+    serializer = BulkUploadSerializer(data = request.data)
+    if serializer.is_valid():
+        input_data = serializer.validated_data
+        code = input_data.get('code', '')
+        if code == settings["UPLOAD_TOKEN"]:
+            data = input_data.get('data', None)
+            err_emails = []
+            if data:
+                for item in data:
+                    try:
+                        user = User(email=item['email'], username=item['username'])
+                        user.set_password(item['pwd'])
+                        user.save()
+                    except Exception as e:
+                        print(e)
+                        err_emails.append(item['email'])
+                if len(err_emails) == 0:
+                    return Response(status=status.HTTP_200_OK)
+                else:
+                    return Response(err_emails, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
