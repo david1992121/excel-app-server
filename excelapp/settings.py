@@ -156,7 +156,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'account.auth.ExpiringTokenAuthentication'
-    ]
+    ],
+    'COERCE_DECIMAL_TO_STRING': False
 }
 
 SITE_HEADER = "企業分析ツール管理"
@@ -182,6 +183,11 @@ SIMPLEUI_CONFIG = {
                     'name': 'バリューエーション',
                     'icon': 'fa fa-book',
                     'url': 'work/ratio'
+                },
+                {
+                    'name': '業種データ',
+                    'icon': 'fa fa-chart-pie',
+                    'url': 'work/industry'
                 }
             ]
         },

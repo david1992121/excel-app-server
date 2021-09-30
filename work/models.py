@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.deletion import SET_NULL
 from account.models import User
 
 # Create your models here.
@@ -14,6 +15,15 @@ class Ratio(models.Model):
     is_active = models.BooleanField("有効", default=True)
     created_at = models.DateTimeField('作成日時', auto_now_add=True)
     updated_at = models.DateTimeField('更新日時', auto_now=True)
+
+class Industry(models.Model):
+    name = models.CharField('33業種', max_length=190)
+    company_num = models.IntegerField('社数', default=0)
+    sales_sum = models.CharField('業界の売上高の合計', null=True, blank=True, max_length=50)
+    profit_sum = models.CharField('業界の営業利益の合計', null=True, blank=True, max_length=50)
+    extended_now = models.DecimalField('売上高の伸び率業界平均（今期）%', null=True, max_digits=5, decimal_places=1)
+    extended_next = models.DecimalField('売上高の伸び率業界平均（来期）%', null=True, max_digits=5, decimal_places=1)
+    order = models.CharField('順序', max_length=50, default="", null=True, blank=True)
 
 class Sheet(models.Model):
     title = models.CharField("タイトル", max_length=255)
@@ -42,10 +52,7 @@ class Sheet(models.Model):
     a_pbr = models.DecimalField("A-PBR", max_digits=8, decimal_places=2, null=True)
     a_sales = models.IntegerField("A-営業CF", null=True)
     a_invest = models.IntegerField("A-投資CF", null=True)
-    a_profit_category = models.CharField("A-33業種分類", max_length=255, null=True, blank=True)
-    a_company_num = models.IntegerField("A-社数", null=True)
-    a_industry_sales = models.CharField("A-売上高業界平均", max_length= 255, null=True, blank=True)
-    a_profit_scale = models.CharField("A-営業利益業界平均", max_length= 255, null=True, blank=True)
+    a_profit_category = models.ForeignKey(Industry, verbose_name="A-33業種分類", null=True, blank=True, related_name="sheet_a", on_delete=models.SET_NULL)
     a_sales_previous = models.CharField("A-売上高-前期", max_length=255, null=True, blank=True)
     a_sales_now = models.CharField("A-売上高-今期", max_length=255, null=True, blank=True)
     a_sales_next = models.CharField("A-売上高-来期", max_length=255, null=True, blank=True)
@@ -53,8 +60,6 @@ class Sheet(models.Model):
     a_profit_now = models.CharField("A-営業利益-今期", max_length=255, null=True, blank=True)
     a_profit_next = models.CharField("A-営業利益-来期", max_length=255, null=True, blank=True)
     a_profit_updated = models.IntegerField("A-最高純益を更新", default=-1)
-    a_extended_now = models.DecimalField("A-売上高の伸び率-今期", max_digits=5, decimal_places=1, null=True)
-    a_extended_next = models.DecimalField("A-売上高の伸び率-来期", max_digits=5, decimal_places=1, null=True)
     a_sales_comment_now = models.IntegerField("A-今期稼ぐ力", default=-1)
     a_sales_comment_next = models.IntegerField("A-来期稼ぐ力", default=-1)
     a_yield_percent = models.DecimalField("A-配当利回り", max_digits=5, decimal_places=2, null=True)
@@ -86,10 +91,7 @@ class Sheet(models.Model):
     b_pbr = models.DecimalField("B-PBR", max_digits=8, decimal_places=2, null=True)
     b_sales = models.IntegerField("B-営業CF", null=True)
     b_invest = models.IntegerField("B-投資CF", null=True)
-    b_profit_category = models.CharField("B-33業種分類", max_length=255, null=True, blank=True)
-    b_company_num = models.IntegerField("B-社数", null=True)
-    b_industry_sales = models.CharField("B-売上高業界平均", max_length= 255, null=True, blank=True)
-    b_profit_scale = models.CharField("B-営業利益業界平均", max_length= 255, null=True, blank=True)
+    b_profit_category = models.ForeignKey(Industry, verbose_name="B-33業種分類", null=True, blank=True, related_name="sheet_b", on_delete=models.SET_NULL)
     b_sales_previous = models.CharField("B-売上高-前期", max_length=255, null=True, blank=True)
     b_sales_now = models.CharField("B-売上高-今期", max_length=255, null=True, blank=True)
     b_sales_next = models.CharField("B-売上高-来期", max_length=255, null=True, blank=True)
@@ -97,8 +99,6 @@ class Sheet(models.Model):
     b_profit_now = models.CharField("B-営業利益-今期", max_length=255, null=True, blank=True)
     b_profit_next = models.CharField("B-営業利益-来期", max_length=255, null=True, blank=True)
     b_profit_updated = models.IntegerField("B-最高純益を更新", default=-1)
-    b_extended_now = models.DecimalField("B-売上高の伸び率-今期", max_digits=5, decimal_places=1, null=True)
-    b_extended_next = models.DecimalField("B-売上高の伸び率-来期", max_digits=5, decimal_places=1, null=True)
     b_sales_comment_now = models.IntegerField("B-今期稼ぐ力", default=-1)
     b_sales_comment_next = models.IntegerField("B-来期稼ぐ力", default=-1)
     b_yield_percent = models.DecimalField("B-配当利回り", max_digits=5, decimal_places=2, null=True)
@@ -130,10 +130,7 @@ class Sheet(models.Model):
     c_pbr = models.DecimalField("C-PBR", max_digits=8, decimal_places=2, null=True)
     c_sales = models.IntegerField("C-営業CF", null=True)
     c_invest = models.IntegerField("C-投資CF", null=True)
-    c_profit_category = models.CharField("C-33業種分類", max_length=255, null=True, blank=True)
-    c_company_num = models.IntegerField("C-社数", null=True)
-    c_industry_sales = models.CharField("C-売上高業界平均", max_length= 255, null=True, blank=True)
-    c_profit_scale = models.CharField("C-営業利益業界平均", max_length= 255, null=True, blank=True)
+    c_profit_category = models.ForeignKey(Industry, verbose_name="C-33業種分類", null=True, blank=True, related_name="sheet_c", on_delete=models.SET_NULL)
     c_sales_previous = models.CharField("C-売上高-前期", max_length=255, null=True, blank=True)
     c_sales_now = models.CharField("C-売上高-今期", max_length=255, null=True, blank=True)
     c_sales_next = models.CharField("C-売上高-来期", max_length=255, null=True, blank=True)
@@ -141,8 +138,6 @@ class Sheet(models.Model):
     c_profit_now = models.CharField("C-営業利益-今期", max_length=255, null=True, blank=True)
     c_profit_next = models.CharField("C-営業利益-来期", max_length=255, null=True, blank=True)
     c_profit_updated = models.IntegerField("C-最高純益を更新", default=-1)
-    c_extended_now = models.DecimalField("C-売上高の伸び率-今期", max_digits=5, decimal_places=1, null=True)
-    c_extended_next = models.DecimalField("C-売上高の伸び率-来期", max_digits=5, decimal_places=1, null=True)
     c_sales_comment_now = models.IntegerField("C-今期稼ぐ力", default=-1)
     c_sales_comment_next = models.IntegerField("C-来期稼ぐ力", default=-1)
     c_yield_percent = models.DecimalField("C-配当利回り", max_digits=5, decimal_places=2, null=True)

@@ -1,5 +1,5 @@
-from work.serializers import RatioSerializer, SheetSerializer
-from work.models import Ratio, Sheet
+from work.serializers import IndustrySerializer, RatioSerializer, SheetSerializer
+from work.models import Industry, Ratio, Sheet
 from rest_framework import status, mixins, generics
 from rest_framework.response import Response
 from rest_framework.decorators import permission_classes, api_view
@@ -16,13 +16,19 @@ class IsOwnerPermission(BasePermission):
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
-def get_list(request):
+def get_ratio_list(request):
     ratio = Ratio.objects.filter(is_active = True).first()
     if ratio:
         return Response(RatioSerializer(ratio).data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_industry_list(request):
+    industries = Industry.objects.order_by("order", "id").all()
+    return Response(IndustrySerializer(industries, many=True).data)
+    
 class ClassesView(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
     queryset = Sheet.objects.all()
     serializer_class = SheetSerializer

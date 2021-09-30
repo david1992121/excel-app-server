@@ -13,3 +13,7 @@
 .calendarnav-next{
     background-position: 0 -45px;
 }
+
+#industry_form .aligned label{
+    width: 220px;
+}
