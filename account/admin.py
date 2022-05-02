@@ -5,10 +5,13 @@ from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import gettext_lazy as _
 from django import forms
 
-class UserCreationFormExtended(UserCreationForm): 
-    def __init__(self, *args, **kwargs): 
-        super(UserCreationFormExtended, self).__init__(*args, **kwargs) 
-        self.fields['email'] = forms.EmailField(label=_("E-mail"), max_length=75)
+
+class UserCreationFormExtended(UserCreationForm):
+    def __init__(self, *args, **kwargs):
+        super(UserCreationFormExtended, self).__init__(*args, **kwargs)
+        self.fields['email'] = forms.EmailField(
+            label=_("E-mail"), max_length=75)
+
 
 class AccountAdmin(UserAdmin):
     add_form = UserCreationFormExtended
@@ -30,5 +33,6 @@ class AccountAdmin(UserAdmin):
         }),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
+
 
 admin.site.register(User, AccountAdmin)

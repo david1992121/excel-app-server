@@ -10,6 +10,8 @@ from rest_framework.authtoken.models import Token
 import datetime
 
 # Create your views here.
+
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register(request):
@@ -20,21 +22,23 @@ def register(request):
         username = input_data.get('username').strip()
         password = input_data.get('password')
 
-        if User.objects.filter(email__iexact = email).count() > 0:
-            return Response(status = status.HTTP_403_FORBIDDEN)
+        if User.objects.filter(email__iexact=email).count() > 0:
+            return Response(status=status.HTTP_403_FORBIDDEN)
         else:
-            user = User.objects.create(email = email, username = username)
+            user = User.objects.create(email=email, username=username)
             user.set_password(password)
             user.save()
             return Response(status=status.HTTP_200_OK)
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
+
 class ObtainExpiringAuthToken(ObtainAuthToken):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            token, created = Token.objects.get_or_create(user=serializer.validated_data['user'])
+            token, created = Token.objects.get_or_create(
+                user=serializer.validated_data['user'])
 
             if not created:
                 # update the created time of the token to keep it valid
@@ -44,17 +48,20 @@ class ObtainExpiringAuthToken(ObtainAuthToken):
             return Response({'token': token.key})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 obtain_expiring_auth_token = ObtainExpiringAuthToken.as_view()
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_info(request):
     return Response(UserSerializer(request.user).data)
 
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def bulk_create(request):
-    serializer = BulkUploadSerializer(data = request.data)
+    serializer = BulkUploadSerializer(data=request.data)
     if serializer.is_valid():
         input_data = serializer.validated_data
         code = input_data.get('code', '')
@@ -64,7 +71,9 @@ def bulk_create(request):
             if data:
                 for item in data:
                     try:
-                        user = User(email=item['email'], username=item['username'])
+                        user = User(
+                            email=item['email'],
+                            username=item['username'])
                         user.set_password(item['pwd'])
                         user.save()
                     except Exception as e:
@@ -73,7 +82,8 @@ def bulk_create(request):
                 if len(err_emails) == 0:
                     return Response(status=status.HTTP_200_OK)
                 else:
-                    return Response(err_emails, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                    return Response(
+                        err_emails, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
     else:
