@@ -36,6 +36,21 @@ def get_industry_list(request):
 class ClassesView(
         mixins.ListModelMixin,
         mixins.CreateModelMixin,
+        generics.GenericAPIView):
+    queryset = Sheet.objects.all()
+    serializer_class = SheetSerializer
+
+    def get_queryset(self):
+        return self.queryset.filter(
+            user_id=self.request.user.id).order_by('-created_at')
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+class ClassesDetailView(
         mixins.UpdateModelMixin,
         mixins.DestroyModelMixin,
         generics.GenericAPIView):
@@ -49,16 +64,6 @@ class ClassesView(
             self.permission_classes = [IsAuthenticated]
 
         return super(ClassesView, self).get_permissions()
-
-    def get_queryset(self):
-        return self.queryset.filter(
-            user_id=self.request.user.id).order_by('-created_at')
-
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
