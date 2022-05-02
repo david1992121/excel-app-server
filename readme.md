@@ -1,3 +1,5 @@
+[![CI](https://github.com/david1992121/excel-app-server/actions/workflows/ci.yml/badge.svg)](https://github.com/david1992121/excel-app-server/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/david1992121/excel-app-server/branch/master/graph/badge.svg?token=OcBf2eNMb1)](https://codecov.io/gh/david1992121/excel-app-server)
 
 # Excel App
 
@@ -7,6 +9,7 @@ Web service for managing statistic data of companies
 
 - Sheet CRUD
 - Data Management (Profit, Growth, Variation, Validity and so on)
+- Auto calculation of several measures ()
 
 ## Main Features
 
