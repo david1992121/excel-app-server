@@ -38,7 +38,7 @@ jobs:
         env:
           DEBUG: off
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          DATABASE_URL: ${{ secrets.DATEBASE_URL }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
           TOKEN_EXPIRE: 1
           UPLOAD_TOKEN: ${{ secrets.UPLOAD_TOKEN }}
         run: python manage.py migrate
