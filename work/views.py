@@ -33,7 +33,7 @@ def get_industry_list(request):
     return Response(IndustrySerializer(industries, many=True).data)
 
 
-class ClassesView(
+class SheetsView(
         mixins.ListModelMixin,
         mixins.CreateModelMixin,
         generics.GenericAPIView):
@@ -50,7 +50,8 @@ class ClassesView(
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
-class ClassesDetailView(
+class SheetsDetailView(
+        mixins.RetrieveModelMixin,
         mixins.UpdateModelMixin,
         mixins.DestroyModelMixin,
         generics.GenericAPIView):
@@ -58,12 +59,15 @@ class ClassesDetailView(
     serializer_class = SheetSerializer
 
     def get_permissions(self):
-        if self.request.method in ["PUT", "DELETE"]:
+        if self.request.method in ["GET", "PUT", "DELETE"]:
             self.permission_classes = [IsOwnerPermission]
         else:
             self.permission_classes = [IsAuthenticated]
 
-        return super(ClassesView, self).get_permissions()
+        return super(SheetsDetailView, self).get_permissions()
+    
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)

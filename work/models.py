@@ -2,8 +2,6 @@ from django.db import models
 from django.db.models.deletion import SET_NULL
 from account.models import User
 
-# Create your models here.
-
 
 class Ratio(models.Model):
     m_avg_per = models.DecimalField("市場平均PER", max_digits=7, decimal_places=2)

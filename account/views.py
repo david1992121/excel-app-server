@@ -85,6 +85,6 @@ def bulk_create(request):
                     return Response(
                         err_emails, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response("heheeer", status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
