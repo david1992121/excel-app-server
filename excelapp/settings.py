@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-import os, environ
+import os
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -46,9 +47,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
-    'rest_framework.authtoken', 
+    'rest_framework.authtoken',
     'account',
-    'work'
+    'work',
+    'drf_yasg'
 ]
 
 MIDDLEWARE = [
@@ -90,14 +92,6 @@ WSGI_APPLICATION = 'excelapp.wsgi.application'
 
 DATABASES = {
     'default': env.db()
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'db_excel_app',
-    #     'USER': 'root',
-    #     'PASSWORD': '4$>Nc9!kpjzj9J77',
-    #     'PORT': '3306',
-    #     'HOST': 'localhost',
-    # }
 }
 
 
@@ -174,11 +168,11 @@ SIMPLEUI_STATIC_OFFLINE = True
 SIMPLEUI_CONFIG = {
     'system_keep': False,
     'menu_display': ['ホーム', '基礎データ', 'ユーザーと権限'],
-    'menus': [   
+    'menus': [
         {
             'name': '基礎データ',
             'icon': 'fa fa-database',
-            'models':[
+            'models': [
                 {
                     'name': 'バリューエーション',
                     'icon': 'fa fa-book',

@@ -5,44 +5,44 @@ from rest_framework.response import Response
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import IsAuthenticated, BasePermission
 
+
 class IsOwnerPermission(BasePermission):
     def has_object_permission(self, request, view, obj):
-        if request.user.is_superuser == False:
+        if not request.user.is_superuser:
             if request.user == obj.user:
-                    return True
+                return True
             return False
         else:
             return True
 
+
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def get_ratio_list(request):
-    ratio = Ratio.objects.filter(is_active = True).first()
+    ratio = Ratio.objects.filter(is_active=True).first()
     if ratio:
         return Response(RatioSerializer(ratio).data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def get_industry_list(request):
     industries = Industry.objects.order_by("order", "id").all()
     return Response(IndustrySerializer(industries, many=True).data)
-    
-class ClassesView(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
+
+
+class SheetsView(
+        mixins.ListModelMixin,
+        mixins.CreateModelMixin,
+        generics.GenericAPIView):
     queryset = Sheet.objects.all()
     serializer_class = SheetSerializer
-    
-    def get_permissions(self):
-        if self.request.method in ["PUT", "DELETE"]:
-            self.permission_classes = [IsOwnerPermission]
-        else:
-            self.permission_classes = [IsAuthenticated]
-        
-        return super(ClassesView, self).get_permissions()
-    
+
     def get_queryset(self):
-        return self.queryset.filter(user_id = self.request.user.id).order_by('-created_at')
+        return self.queryset.filter(
+            user_id=self.request.user.id).order_by('-created_at')
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
@@ -50,11 +50,32 @@ class ClassesView(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.UpdateM
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
+
+class SheetsDetailView(
+        mixins.RetrieveModelMixin,
+        mixins.UpdateModelMixin,
+        mixins.DestroyModelMixin,
+        generics.GenericAPIView):
+    queryset = Sheet.objects.all()
+    serializer_class = SheetSerializer
+
+    def get_permissions(self):
+        if self.request.method in ["GET", "PUT", "DELETE"]:
+            self.permission_classes = [IsOwnerPermission]
+        else:
+            self.permission_classes = [IsAuthenticated]
+
+        return super(SheetsDetailView, self).get_permissions()
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
+
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -67,9 +88,13 @@ def check_sheet_title(request):
             try:
                 sheet = Sheet.objects.get(pk=sheet_id)
                 if sheet.user_id != request.user.id:
-                    return Response(status=status.HTTP_403_FORBIDDEN)                   
+                    return Response(status=status.HTTP_403_FORBIDDEN)
             except Sheet.DoesNotExist:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
-        return Response( Sheet.objects.exclude(id = sheet_id).filter(user = request.user, title = title).count() == 0 )
+        return Response(
+            Sheet.objects.exclude(
+                id=sheet_id).filter(
+                user=request.user,
+                title=title).count() == 0)
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)

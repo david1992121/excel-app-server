@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import pytz
 from django.conf import settings
 
+
 class ExpiringTokenAuthentication(TokenAuthentication):
     def authenticate_credentials(self, key):
         try:

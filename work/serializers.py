@@ -7,17 +7,20 @@ from django.db.models import fields
 from work.models import Ratio, Sheet, Industry
 from rest_framework import serializers
 
+
 class RatioSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         fields = "__all__"
         model = Ratio
 
+
 class IndustrySerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         fields = "__all__"
         model = Industry
+
 
 class SheetSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(write_only=True)
@@ -28,7 +31,7 @@ class SheetSerializer(serializers.ModelSerializer):
     b_profit_category = IndustrySerializer(read_only=True)
     c_profit_category_id = serializers.IntegerField(write_only=True)
     c_profit_category = IndustrySerializer(read_only=True)
-    
+
     class Meta:
         fields = "__all__"
         model = Sheet
@@ -55,8 +58,8 @@ class SheetSerializer(serializers.ModelSerializer):
             new_sheet.c_profit_category_id = None
         else:
             new_sheet.c_profit_category_id = c_profit_id
-        
-        new_sheet.user = User.objects.get(pk = user_id)
+
+        new_sheet.user = User.objects.get(pk=user_id)
         new_sheet.save()
         return new_sheet
 
@@ -64,7 +67,7 @@ class SheetSerializer(serializers.ModelSerializer):
         a_profit_id = validated_data.pop('a_profit_category_id')
         b_profit_id = validated_data.pop('b_profit_category_id')
         c_profit_id = validated_data.pop('c_profit_category_id')
-        
+
         if a_profit_id == 0:
             instance.a_profit_category_id = None
         else:
@@ -82,6 +85,6 @@ class SheetSerializer(serializers.ModelSerializer):
 
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
-        
+
         instance.save()
         return instance
