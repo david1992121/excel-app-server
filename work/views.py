@@ -50,6 +50,7 @@ class SheetsView(
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
+
 class SheetsDetailView(
         mixins.RetrieveModelMixin,
         mixins.UpdateModelMixin,
@@ -65,7 +66,7 @@ class SheetsDetailView(
             self.permission_classes = [IsAuthenticated]
 
         return super(SheetsDetailView, self).get_permissions()
-    
+
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 
