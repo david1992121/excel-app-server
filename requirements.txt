@@ -6,7 +6,7 @@ charset-normalizer==2.0.12
 coreapi==2.3.3
 coreschema==0.0.4
 coverage==6.3.2
-Django==3.2.7
+Django==3.2.13
 django-cors-headers==3.8.0
 django-environ==0.7.0
 django-simpleui==3.9.1
